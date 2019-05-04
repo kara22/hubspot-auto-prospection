@@ -1,7 +1,7 @@
 const configuration = require("./config/");
 const axios = require("axios");
 const importedFunctions = require("./functions/index");
-const triggerButton = document.querySelector("#launch");
+const cron = require("node-cron");
 
 var fs = require("fs");
 
@@ -24,6 +24,6 @@ const createHubspotProspects = async url => {
         .catch(err => console.log(err));
 };
 
-triggerButton.addEventListener("click", e => {
+cron.schedule("30 18 * * *", () => {
     createHubspotProspects(configuration.details.firstHiveProspectsUrl);
 });
