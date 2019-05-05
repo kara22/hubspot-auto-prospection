@@ -22,6 +22,6 @@ const createHubspotProspects = async url => {
         .catch(err => console.log(err));
 };
 
-cron.schedule("* * * * *", () => {
+cron.schedule("40 20 * * *", () => {
     createHubspotProspects(process.env.HIVE_AUTOPROSP_URL);
 });
