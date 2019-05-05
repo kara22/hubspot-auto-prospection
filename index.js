@@ -1,8 +1,8 @@
-const configuration = require("./config/");
 const axios = require("axios");
 const importedFunctions = require("./functions/index");
 const cron = require("node-cron");
-
+const ENV = require("dotenv");
+ENV.config();
 var fs = require("fs");
 
 const createHubspotProspects = async url => {
@@ -25,5 +25,5 @@ const createHubspotProspects = async url => {
 };
 
 cron.schedule("30 18 * * *", () => {
-    createHubspotProspects(configuration.details.firstHiveProspectsUrl);
+    createHubspotProspects(process.env.HIVE_AUTOPROSP_URL);
 });

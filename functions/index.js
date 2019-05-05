@@ -1,4 +1,3 @@
-const configuration = require("../config/index");
 const axios = require("axios");
 
 // FUNCTION TO VERIFY PROSPECT EMAIL
@@ -10,7 +9,7 @@ const emailVerification = async prospect => {
     await axios
         .get(
             `https://api.neverbounce.com/v4/single/check?key=${
-                configuration.details.neverBounceApiKey
+                process.env.NEVERBOUNCE_API_KEY
             }&email=${prospect.email}`
         )
         .then(res => {
@@ -49,12 +48,12 @@ const emailVerification = async prospect => {
 }; // FUNCTION TO CREATE THE CONTACT INTO HUBSPOT
 const createContact = async prospect => {
     const hubspotWorkflowUrl = `https://api.hubapi.com/automation/v2/workflows/${
-        configuration.details.workflowId
+        process.env.WORKFLOW_ID
     }/enrollments/contacts/${prospect.email}?hapikey=${
-        configuration.details.hubspotApiKey
+        process.env.HUBSPOT_API_KEY
     }`;
     const hubspotCreateContactUrl = `https://api.hubapi.com/contacts/v1/contact/?hapikey=${
-        configuration.details.hubspotApiKey
+        process.env.HUBSPOT_API_KEY
     }`;
     console.log(`⏳ Commencing create hubspot contact for ${prospect.email}`);
     await axios
@@ -120,7 +119,7 @@ const createContact = async prospect => {
                 `✅ Account created for  ${
                     prospect.email
                 }, lets try to put the prospect into workflow id n° ${
-                    configuration.details.workflowId
+                    process.env.WORKFLOW_ID
                 } `
             ),
                 // add the prospect into a Hubspot workflow
@@ -147,7 +146,7 @@ const addToHubspotWorkflow = async (prospect, hubspotWorkflowUrl) => {
     // add the prospect into a Hubspot workflow
     console.log(
         `⏳ Commencing to add ${prospect.email} in workflow ${
-            configuration.details.workflowId
+            process.env.WORKFLOW_ID
         }`
     );
     await axios
@@ -155,7 +154,7 @@ const addToHubspotWorkflow = async (prospect, hubspotWorkflowUrl) => {
         .then(res => {
             console.log(
                 `📩 Successfully add ${prospect.email} into workflow n° ${
-                    configuration.details.workflowId
+                    process.env.WORKFLOW_ID
                 } \n\n`
             );
         })
