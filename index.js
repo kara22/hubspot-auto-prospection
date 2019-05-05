@@ -1,9 +1,7 @@
 const axios = require("axios");
 const importedFunctions = require("./functions/index");
 const cron = require("node-cron");
-const ENV = require("dotenv");
-ENV.config();
-var fs = require("fs");
+if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 const createHubspotProspects = async url => {
     // get all prospects to add via sheety
@@ -24,6 +22,6 @@ const createHubspotProspects = async url => {
         .catch(err => console.log(err));
 };
 
-cron.schedule("30 18 * * *", () => {
+cron.schedule("* * * * *", () => {
     createHubspotProspects(process.env.HIVE_AUTOPROSP_URL);
 });
