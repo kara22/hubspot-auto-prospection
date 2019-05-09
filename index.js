@@ -23,6 +23,6 @@ const createHubspotProspects = async url => {
 };
 
 // setup the cron job every 2,3,4 days of the week on 19h (utc)
-cron.schedule("00 19 * * 2, 3, 4", () => {
+cron.schedule("18 15 * * Tuesday-Thursday", () => {
     createHubspotProspects(process.env.HIVE_AUTOPROSP_URL);
 });
