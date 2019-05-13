@@ -47,72 +47,69 @@ const emailVerification = async prospect => {
         );
 }; // FUNCTION TO CREATE THE CONTACT INTO HUBSPOT
 const createContact = async prospect => {
-    const hubspotWorkflowUrl = `https://api.hubapi.com/automation/v2/workflows/${
-        process.env.WORKFLOW_ID
-    }/enrollments/contacts/${prospect.email}?hapikey=${
-        process.env.HUBSPOT_API_KEY
-    }`;
-    const hubspotCreateContactUrl = `https://api.hubapi.com/contacts/v1/contact/?hapikey=${
-        process.env.HUBSPOT_API_KEY
-    }`;
     console.log(`⏳ Commencing create hubspot contact for ${prospect.email}`);
     await axios
-        .post(hubspotCreateContactUrl, {
-            properties: [
-                {
-                    property: "firstname",
-                    value: prospect.firstName
-                },
-                {
-                    property: "lastname",
-                    value: prospect.lastName
-                },
-                {
-                    property: "email",
-                    value: prospect.email
-                },
-                {
-                    property: "company",
-                    value: prospect.companyName
-                },
-                {
-                    property: "city",
-                    value: prospect.location
-                },
-                {
-                    property: "linkedin_url",
-                    value: prospect.defaultProfileUrl
-                },
-                {
-                    property: "co_auto_prospection",
-                    value: prospect.co_auto_prospection
-                },
-                {
-                    property: "lead_source__c",
-                    value: prospect.lead_source__c
-                },
-                {
-                    property: "lifecyclestage",
-                    value: prospect.lifecyclestage
-                },
-                {
-                    property: "target_type",
-                    value: prospect.target_type
-                },
-                {
-                    property: "hubspot_owner_id",
-                    value: prospect.hubspot_owner_id
-                },
-                {
-                    property: "co_level",
-                    value: prospect.co_level
-                },
-                {
-                    property: "demand_hive",
-                    value: prospect.hive
-                }
-            ]
-        })
+        .post(
+            `https://api.hubapi.com/contacts/v1/contact/?hapikey=${
+                process.env.HUBSPOT_API_KEY
+            }`,
+            {
+                properties: [
+                    {
+                        property: "firstname",
+                        value: prospect.firstName
+                    },
+                    {
+                        property: "lastname",
+                        value: prospect.lastName
+                    },
+                    {
+                        property: "email",
+                        value: prospect.email
+                    },
+                    {
+                        property: "company",
+                        value: prospect.companyName
+                    },
+                    {
+                        property: "city",
+                        value: prospect.location
+                    },
+                    {
+                        property: "linkedin_url",
+                        value: prospect.defaultProfileUrl
+                    },
+                    {
+                        property: "co_auto_prospection",
+                        value: prospect.co_auto_prospection
+                    },
+                    {
+                        property: "lead_source__c",
+                        value: prospect.lead_source__c
+                    },
+                    {
+                        property: "lifecyclestage",
+                        value: prospect.lifecyclestage
+                    },
+                    {
+                        property: "target_type",
+                        value: prospect.target_type
+                    },
+                    {
+                        property: "hubspot_owner_id",
+                        value: prospect.hubspot_owner_id
+                    },
+                    {
+                        property: "co_level",
+                        value: prospect.co_level
+                    },
+                    {
+                        property: "demand_hive",
+                        value: prospect.hive
+                    }
+                ]
+            }
+        )
         // If success, log confirmation
         .then(res => {
             console.log(
@@ -123,7 +120,7 @@ const createContact = async prospect => {
                 } `
             ),
                 // add the prospect into a Hubspot workflow
-                addToHubspotWorkflow(prospect, hubspotWorkflowUrl);
+                addToHubspotWorkflow(prospect);
         })
         // If impossible to create the contact, log the response from the Hubspot API who tells us why
         .catch(err => {
@@ -132,17 +129,9 @@ const createContact = async prospect => {
                     err.response.data.message
                 } \n\n `
             );
-            // axios
-            //     .get(
-            //         `https://api.hubapi.com/contacts/v1/contact/email/${
-            //             prospect.email
-            //         }/profile?hapikey=${configuration.details.hubspotApiKey}`
-            //     )
-            //     .then(res => console.log(res.data))
-            //     .catch(err => console.log(err));
         });
 }; // FUNCTION TO ADD HUBSPOT CONTACT INTO A WORKFLOW
-const addToHubspotWorkflow = async (prospect, hubspotWorkflowUrl) => {
+const addToHubspotWorkflow = async prospect => {
     // add the prospect into a Hubspot workflow
     console.log(
         `⏳ Commencing to add ${prospect.email} in workflow ${
@@ -150,7 +139,13 @@ const addToHubspotWorkflow = async (prospect, hubspotWorkflowUrl) => {
         }`
     );
     await axios
-        .post(hubspotWorkflowUrl)
+        .post(
+            `https://api.hubapi.com/automation/v2/workflows/${
+                process.env.WORKFLOW_ID
+            }/enrollments/contacts/${prospect.email}?hapikey=${
+                process.env.HUBSPOT_API_KEY
+            }`
+        )
         .then(res => {
             console.log(
                 `📩 Successfully add ${prospect.email} into workflow n° ${

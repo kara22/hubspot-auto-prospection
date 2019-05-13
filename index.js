@@ -3,10 +3,10 @@ const importedFunctions = require("./functions/index");
 const cron = require("node-cron");
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
-const createHubspotProspects = async url => {
+const createHubspotProspects = async () => {
     // get all prospects to add via sheety
     await axios
-        .get(url)
+        .get(process.env.HIVE_AUTOPROSP_URL)
         .then(res => {
             const data = res.data;
 
@@ -24,5 +24,5 @@ const createHubspotProspects = async url => {
 
 // setup the cron job every 2,3,4 days of the week on 18h (utc)
 cron.schedule("00 18 * * Tuesday-Thursday", () => {
-    createHubspotProspects(process.env.HIVE_AUTOPROSP_URL);
+    createHubspotProspects();
 });
